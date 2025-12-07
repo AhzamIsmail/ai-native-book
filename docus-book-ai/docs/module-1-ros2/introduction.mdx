@@ -1,0 +1,130 @@
+---
+id: module-1-intro
+
+title: "Module 1 - The Robotic Nervous System (ROS 2)"
+slug: /module-1/intro
+sidebar_position: 1
+---
+
+# Module 1 - The Robotic Nervous System (ROS 2)
+
+## Module Summary
+
+Module 1 introduces ROS 2 (Robot Operating System 2) as the foundational backbone for controlling humanoid robots. It explores the core architectural components of ROS 2, such as nodes, topics, services, and actions, which facilitate real-time communication and coordination among various robotic subsystems. The module also touches upon Python integration using `rclpy` and the basics of URDF (Unified Robot Description Format) for defining the structural and kinematic properties of humanoid robots. This foundational understanding is crucial for students to grasp how complex robotic behaviors are orchestrated and communicated within a distributed system. The module aims to provide a high-level conceptual overview, complemented by small, illustrative code snippets.
+
+## High-Level Learning Goals
+
+Upon completing this module, students will:
+*   Understand the fundamental architecture of ROS 2 and its role in robotics.
+*   Grasp the concepts of ROS 2 nodes, topics, services, and actions for inter-component communication.
+*   Comprehend how Python (specifically `rclpy`) integrates with ROS 2 for developing robotic applications.
+*   Understand the basic principles of URDF for describing humanoid robot kinematics and appearance.
+
+## Key Concepts
+
+*   **ROS 2 (Robot Operating System 2)**: An open-source, meta-operating system for robots, providing standard operating system services such as hardware abstraction, low-level device control, implementation of common functionality, message-passing between processes, and package management.
+*   **Nodes**: Individual executable processes in ROS 2 that perform specific tasks (e.g., a camera driver, a motor controller, a navigation algorithm).
+*   **Topics**: Named buses over which nodes exchange messages. Topics enable anonymous publish/subscribe communication.
+*   **Services**: A request/reply communication mechanism that allows nodes to offer and use functionality, where a client sends a request and waits for a response from a server.
+*   **Actions**: A higher-level communication method built on topics and services, used for long-running, goal-oriented tasks that provide feedback and allow for preemption.
+*   **rclpy**: The Python client library for ROS 2, enabling developers to write ROS 2 nodes using Python.
+*   **URDF (Unified Robot Description Format)**: An XML file format in ROS used for describing all elements of a robot, including its visual appearance, collision properties, and kinematic and dynamic parameters.
+
+## Examples
+
+### Python ROS 2 Node (Pseudo-code)
+
+A simple ROS 2 Python node that publishes a "Hello World" message to a topic.
+
+```python
+# filename: simple_publisher_node.py
+import rclpy
+from std_msgs.msg import String
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = rclpy.create_node('minimal_publisher')
+
+    publisher = node.create_publisher(String, 'topic', 10)
+    msg = String()
+    i = 0
+    while rclpy.ok():
+        msg.data = 'Hello ROS 2 World: %d' % i
+        node.get_logger().info('Publishing: "%s"' % msg.data)
+        publisher.publish(msg)
+        i += 1
+        rclpy.spin_once(node, timeout_sec=0.5) # Process events every 0.5 seconds
+
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Diagrams
+
+The following diagram illustrates the basic ROS 2 communication graph with nodes and topics.
+
+![ROS 2 Communication Graph](/diagrams/ros2-communication-graph.png)
+
+```
++-------------+         +-------------+
+| Publisher   | ------> | Topic A     | <------+
+| Node        |         +-------------+        |
++-------------+                                 |
+                                                |
++-------------+         +-------------+         |
+| Subscriber  | <------ | Topic A     |         |
+| Node        |         +-------------+         |
++-------------+                                 |
+                                                |
++-------------+         +-------------+         |
+| Service     | <-----> | Service B   |         |
+| Server Node |         +-------------+         |
++-------------+                                 |
+                                                |
++-------------+         +-------------+         |
+| Service     | <-----> | Service B   |         |
+| Client Node |         +-------------+         |
++-------------+                                 |
+                                                |
++-------------+         +-------------+         |
+| Action      | <-----> | Action C    |         |
+| Client Node |         +-------------+         |
++-------------+                                 |
+                                                |
++-------------+         +-------------+         |
+| Action      | <-----> | Action C    |         |
+| Server Node |         +-------------+         |
++-------------+---------------------------------+
+```
+
+## Practical Outcomes
+
+Students will conceptually understand how ROS 2 facilitates modular and distributed robotic software development, laying the groundwork for more complex humanoid robot control systems.
+
+## How the Module Connects to the Next
+
+Module 1 provides the essential understanding of how various components of a robot communicate and operate through ROS 2. This knowledge is fundamental for Module 2, which will introduce the concept of a Digital Twin and how these ROS 2-controlled robots can be simulated in virtual environments like Gazebo and Unity, forming a critical link between abstract control logic and its physical (or virtual) manifestation.
+
+---
+
+## References
+
+```yaml
+references:
+  - author: "Open Robotics"
+    year: 2023
+    title: "ROS 2 Documentation"
+    url: "https://docs.ros.org/en/humble/"
+  - author: "D. H. Kim, J. K. Park, & S. J. Lee"
+    year: 2021
+    title: "ROS 2 in Action: Build Your Own ROS 2 Projects"
+    publisher: "Manning Publications"
+  - author: "NVIDIA"
+    year: 2024
+    title: "NVIDIA Isaac Sim Documentation"
+    url: "https://docs.omniverse.nvidia.com/app_isaacsim/app_isaacsim/overview.html"
+```
+
